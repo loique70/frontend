@@ -1,35 +1,37 @@
 import  { useState } from 'react'
 
-const Form = () => {
-  const [consoles,setConsole] = useState('PS2');
-  const [category, setCategory] = useState('Action');
-  const [rating, setRating] = useState('T') ;
-  const [userPoint, setUserPoint] = useState(0.1);
-  const [year, SetYear] = useState(2000);
-  const [critic, setCritic] = useState(1);
-  const [publisher, setPublisher] = useState('Nintendo');
-  const [isPending,setIspending] = useState(false);
 
+
+const Form = () => {
+  const [CONSOLE,setConsole] = useState('PS2');
+  const [CATEGORY, setCategory] = useState('Action');
+  const [RATING, setRating] = useState('T') ;
+  const [USER_POINTS, setUserPoint] = useState(0.1);
+  const [YEAR, SetYear] = useState(2000);
+  const [CRITICS_POINTS, setCritic] = useState(1);
+  const [PUBLISHER, setPublisher] = useState('Nintendo');
+  const [isPending,setIspending] = useState(false);
+  const [valeurFinale,setValeurFinale] = useState();
   const handleSubmit = (e) => {
     e.preventDefault();
-    const blog = {consoles,category,rating,userPoint,year,critic,publisher};
-       //console.log(blog);
+    const blog = {CONSOLE,RATING,CRITICS_POINTS,CATEGORY,YEAR,PUBLISHER,USER_POINTS};
+       console.log(blog);
     setIspending(true);
-
     fetch('http://127.0.0.1:5000/get_prediction',{
         method: 'POST',
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify( blog)
-    }).then(() =>{
-        console.log('New file added')
-    })
+    }).then(response=>response.json()
+        ).then(data=>{setValeurFinale(data.result)})
+    
   }
+  
   
   return (
     <div>
         <form onSubmit={handleSubmit}>
             <label>Select console:</label>
-            <select value={consoles} onChange={(e) => setConsole(e.target.value)}>
+            <select value={CONSOLE} onChange={(e) => setConsole(e.target.value)}>
                 <option value="PS2">PS2</option>
                 <option value="X360">X360</option>
                 <option value="PS3">PS3</option>
@@ -37,7 +39,7 @@ const Form = () => {
             </select>
 
             <label>Select category:</label>
-            <select value={category} onChange = {(e) => setCategory(e.target.value)}>
+            <select value={CATEGORY} onChange = {(e) => setCategory(e.target.value)}>
                 <option value="Action">Action</option>
                 <option value="Sport">Sport</option>
                 <option value="Shooter">Shooter</option>
@@ -45,7 +47,7 @@ const Form = () => {
             </select>
 
             <label>Select rating:</label>
-            <select value={rating} onChange = {(e) => setRating(e.target.value)}>
+            <select value={RATING} onChange = {(e) => setRating(e.target.value)}>
                 <option value="T">T</option>
                 <option value="E">E</option>
                 <option value="M">M</option>
@@ -53,7 +55,7 @@ const Form = () => {
             </select>
 
             <label>Select User point:</label>
-            <select value={userPoint}  onChange = {(e) => setUserPoint(e.target.value)}>
+            <select value={USER_POINTS}  onChange = {(e) => setUserPoint(e.target.value)}>
                 <option value="0.1">0.1</option>
                 <option value="0.5">0.5</option>
                 <option value="1.0">1.0</option>
@@ -61,7 +63,7 @@ const Form = () => {
             </select>
 
             <label>Select year:</label>
-            <select value={year} onChange = {(e) => SetYear(parseInt(e.target.value))}>
+            <select value={YEAR} onChange = {(e) => SetYear(parseInt(e.target.value))}>
                 <option value="2000">2000</option>
                 <option value="2005">2005</option>
                 <option value="2010">2010</option>
@@ -69,7 +71,7 @@ const Form = () => {
             </select>
 
             <label>Select publisher</label>
-            <select value={publisher} onChange = {(e) => setPublisher(e.target.value)}>
+            <select value={PUBLISHER} onChange = {(e) => setPublisher(e.target.value)}>
                 <option value="Electronic Art">Electronic Arts</option>
                 <option value="Activision">Activision</option>
                 <option value="Ubisoft">Ubisoft</option>
@@ -77,7 +79,7 @@ const Form = () => {
             </select>
 
             <label>Select critic points:</label>
-            <select value={critic} onChange = {(e) => setCritic(parseInt(parseInt(e.target.value)))}>
+            <select value={CRITICS_POINTS} onChange = {(e) => setCritic(parseInt(parseInt(e.target.value)))}>
                 <option value="1">1</option>
                 <option value="5">5</option>
                 <option value="10">10</option>
@@ -86,6 +88,10 @@ const Form = () => {
             { !isPending && <button>Submit</button>}
             { isPending && <button>Submiting...</button>}
         </form>
+        <div>
+            <h5>La prediction est :</h5>
+            {valeurFinale}
+        </div>
     </div>
   )
 }
